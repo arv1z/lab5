@@ -1,7 +1,16 @@
 #include <gtest/gtest.h>
-
+#include <gmock/gmock.h>
 #include "Account.h"
 #include "Transaction.h"
+
+using ::testing::_;
+using ::testing::Return;
+
+class MockTransaction : public Transaction {
+public:
+    MOCK_METHOD(void, SaveToDataBase, (Account& from, Account& to, int sum), (override));
+};
+
 
 TEST(Account, Constructor)
 {
@@ -45,4 +54,28 @@ TEST(Transaction, Make)
     Account to(2, 100);
 
     EXPECT_TRUE(transaction.Make(from, to, 100));
+}
+
+TEST(MockTransactionTest, SaveToDataBaseCalled)
+{
+    MockTransaction transaction;
+
+    Account from(1, 1000);
+    Account to(2, 1000);
+
+    EXPECT_CALL(transaction, SaveToDataBase(_, _, 100)).Times(1);
+
+    EXPECT_TRUE(transaction.Make(from, to, 100));
+}
+
+TEST(MockTransactionTest, SaveToDataBaseNotCalled)
+{
+    MockTransaction transaction;
+
+    Account from(1, 1000);
+    Account to(2, 1000);
+
+    EXPECT_CALL(transaction, SaveToDataBase(_, _, _)).Times(0);
+
+    EXPECT_THROW(transaction.Make(from, to, 50), std::logic_error);
 }

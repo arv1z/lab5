@@ -18,6 +18,8 @@ if(BUILD_TESTS)
         banking
         GTest::GTest
         GTest::Main
+	gmock
+	gmock_main
         pthread
     )
 
