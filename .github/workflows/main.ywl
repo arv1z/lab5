@@ -17,7 +17,9 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y cmake g++ libgtest-dev libgmock-dev
-
+    - name: Check gmock
+      run: |
+        find /usr -name gmock.h    
     - name: Configure
       run: |
         mkdir build
